@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videojuego de Tenis Horizontal</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(45deg, #ff6b6b, #f7c6c7, #0abde3, #4cd137);
+            background-size: 600% 600%;
+            animation: gradient 10s ease infinite;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .instructions {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        canvas {
+            border: 2px solid #fff;
+        }
+
+        .score {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            color: #fff;
+            z-index: 10;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .winner {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #fff;
+            display: none;
+            z-index: 10;
+        }
+
+        .restart, .start {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .restart button, .start button {
+            font-size: 24px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .restart {
+            display: none;
+        }
+
+        @keyframes explosion {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .explosion {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: yellow;
+            border-radius: 50%;
+            z-index: 9;
+            animation: explosion 1s forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">Primer jugador en llegar a 10 puntos gana</div>
+    <div class="score">
+        <span id="score1">0</span> - <span id="score2">0</span>
+    </div>
+    <div class="winner" id="winnerMessage"></div>
+    <div class="start" id="startButton">
+        <button onclick="startGame()">Start</button>
+    </div>
+    <div class="restart" id="restartButton">
+        <button onclick="restartGame()">Reiniciar Juego</button>
+    </div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const player1 = {
+            x: 10,
+            y: canvas.height / 2 - 30,
+            width: 10,
+            height: 60,
+            color: '#00FF00',
+            moveUp: false,
+            moveDown: false,
+            speed: 5
+        };
+
+        const player2 = {
+            x: canvas.width - 20,
+            y: canvas.height / 2 - 30,
+            width: 10,
+            height: 60,
+            color: '#FF0000',
+            moveUp: false,
+            moveDown: false,
+            speed: 5
+        };
+
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 10,
+            color: '#FFFFFF',
+            speedX: 3,
+            speedY: 3,
+            maxSpeed: 7
+        };
+
+        let score1 = 0;
+        let score2 = 0;
+        const WINNING_SCORE = 10;
+        let gameOver = false;
+        let gameStarted = false;
+        let hitCount = 0;
+
+        function drawRect(x, y, width, height, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, width, height);
+        }
+
+        function drawCircle(x, y, radius, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawLine(x, y, width, height) {
+            ctx.setLineDash([5, 15]);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x, y + height);
+            ctx.strokeStyle = '#FFF';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function showExplosion(x, y) {
+            const explosion = document.createElement('div');
+            explosion.classList.add('explosion');
+            explosion.style.left = `${x}px`;
+            explosion.style.top = `${y}px`;
+            document.body.appendChild(explosion);
+            setTimeout(() => {
+                explosion.remove();
+            }, 1000);
+        }
+
+        function update() {
+            if (player1.moveUp && player1.y > 0) {
+                player1.y -= player1.speed;
+            } else if (player1.moveDown && player1.y < canvas.height - player1.height) {
+                player1.y += player1.speed;
+            }
+
+            if (player2.moveUp && player2.y > 0) {
+                player2.y -= player2.speed;
+            } else if (player2.moveDown && player2.y < canvas.height - player2.height) {
+                player2.y += player2.speed;
+            }
+
+            ball.x += ball.speedX;
+            ball.y += ball.speedY;
+
+            if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
+                ball.speedY *= -1;
+            }
+
+            if (ball.x - ball.radius < 0) {
+                score2++;
+                showExplosion(ball.x, ball.y);
+                resetBall();
+            }
+
+            if (ball.x + ball.radius > canvas.width) {
+                score1++;
+                showExplosion(ball.x, ball.y);
+                resetBall();
+            }
+
+            if (ball.x - ball.radius < player1.x + player1.width && ball.y > player1.y && ball.y < player1.y + player1.height) {
+                ball.speedX *= -1;
+                ball.x = player1.x + player1.width + ball.radius;
+                hitCount++;
+                if (hitCount % 2 === 0 && Math.abs(ball.speedX) < ball.maxSpeed) {
+                    ball.speedX += (ball.speedX > 0 ? 1 : -1);
+                    ball.speedY += (ball.speedY > 0 ? 1 : -1);
+                }
+            }
+
+            if (ball.x + ball.radius > player2.x && ball.y > player2.y && ball.y < player2.y + player2.height) {
+                ball.speedX *= -1;
+                ball.x = player2.x - ball.radius;
+                hitCount++;
+                if (hitCount % 2 === 0 && Math.abs(ball.speedX) < ball.maxSpeed) {
+                    ball.speedX += (ball.speedX > 0 ? 1 : -1);
+                    ball.speedY += (ball.speedY > 0 ? 1 : -1);
+                }
+            }
+
+            document.getElementById('score1').innerText = score1;
+            document.getElementById('score2').innerText = score2;
+
+            if (score1 >= WINNING_SCORE || score2 >= WINNING_SCORE) {
+                gameOver = true;
+                const winnerMessage = score1 >= WINNING_SCORE ? 'Jugador 1 Wins!' : 'Jugador 2 Wins!';
+                document.getElementById('winnerMessage').innerText = winnerMessage;
+                document.getElementById('winnerMessage').style.display = 'block';
+                document.getElementById('restartButton').style.display = 'block';
+            }
+        }
+
+        function resetBall() {
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+            ball.speedX = 3 * (Math.random() > 0.5 ? 1 : -1);
+            ball.speedY = 3 * (Math.random() > 0.5 ? 1 : -1);
+            hitCount = 0;
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawRect(player1.x, player1.y, player1.width, player1.height, player1.color);
+            drawRect(player2.x, player2.y, player2.width, player2.height, player2.color);
+            drawCircle(ball.x, ball.y, ball.radius, ball.color);
+            drawLine(canvas.width / 2, 0, 2, canvas.height);
+        }
+
+        function gameLoop() {
+            if (!gameOver && gameStarted) {
+                update();
+                render();
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function startGame() {
+            gameStarted = true;
+            document.getElementById('startButton').style.display = 'none';
+            gameLoop();
+        }
+
+        function restartGame() {
+            score1 = 0;
+            score2 = 0;
+            gameOver = false;
+            gameStarted = false;
+            document.getElementById('winnerMessage').style.display = 'none';
+            document.getElementById('restartButton').style.display = 'none';
+            document.getElementById('startButton').style.display = 'block';
+            resetBall();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowUp') {
+                player2.moveUp = true;
+            } else if (e.code === 'ArrowDown') {
+                player2.moveDown = true;
+            }
+
+            if (e.code === 'KeyW') {
+                player1.moveUp = true;
+            } else if (e.code === 'KeyS') {
+                player1.moveDown = true;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowUp') {
+                player2.moveUp = false;
+            } else if (e.code === 'ArrowDown') {
+                player2.moveDown = false;
+            }
+
+            if (e.code === 'KeyW') {
+                player1.moveUp = false;
+            } else if (e.code === 'KeyS') {
+                player1.moveDown = false;
+            }
+        });
+    </script>
+</body>
+</html>
