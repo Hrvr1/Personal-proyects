@@ -32,7 +32,7 @@
             color: #fff;
             margin-bottom: 20px;
             font-family: 'Pacifico', cursive;
-            text-align: center; /* Centrar el texto de instrucciones */
+            text-align: center;
         }
 
         canvas {
@@ -118,6 +118,7 @@
             font-family: 'Pacifico', cursive;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .restart button:hover, .start button:hover {
@@ -146,6 +147,33 @@
 
         .color-selector label {
             margin-bottom: 5px;
+        }
+
+        .audio-controls {
+            position: absolute;
+            border-radius: 20px;
+            border: none;
+            padding: 10px 20px;
+            font-size: 25px;
+            top: 150px;
+            left: 60px;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            font-family: 'Pacifico', cursive;
+            background-color: #ff6b6b;
+        }
+
+        .volume-slider {
+            width: 150px;
+            cursor: pointer;
+        }
+
+        .volume-label {
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            color: #fff;
+            font-family: 'Pacifico', cursive;
         }
     </style>
 </head>
@@ -181,10 +209,43 @@
     <div class="restart" id="restartButton">
         <button onclick="restartGame()">Restart</button>
     </div>
+    <div class="audio-controls">
+        <div>
+            <label class="volume-label">Music Volume: <span id="musicVolumeLabel">50%</span></label>
+            <input type="range" id="musicVolume" class="volume-slider" min="0" max="100" value="50" oninput="setMusicVolume(this.value)">
+        </div>
+        <div>
+            <label class="volume-label">Effects Volume: <span id="effectsVolumeLabel">50%</span></label>
+            <input type="range" id="effectsVolume" class="volume-slider" min="0" max="100" value="50" oninput="setEffectsVolume(this.value)">
+        </div>
+    </div>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <audio id="backgroundMusic" src="sounds/game-music.mp3" loop></audio>
+    <audio id="hitSound" src="sounds/hit.wav"></audio>
+    <audio id="reboundSound" src="sounds/rebound.wav"></audio>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const hitSound = document.getElementById('hitSound');
+        const reboundSound = document.getElementById('reboundSound');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        
+        const effectsVolume = {
+            music: 0.5,
+            effects: 0.5
+        };
+
+        backgroundMusic.volume = effectsVolume.music; // Initial volume
+
+        hitSound.volume = effectsVolume.effects;
+        reboundSound.volume = effectsVolume.effects;
+
+        let player1Score = 0;
+        let player2Score = 0;
+        const winningScore = 10;
+        let isGameOver = false;
+        let hitCount = 0;
 
         const player1 = {
             x: 10,
@@ -192,9 +253,7 @@
             width: 10,
             height: 60,
             color: '#00FF00',
-            moveUp: false,
-            moveDown: false,
-            speed: 5
+            score: 0
         };
 
         const player2 = {
@@ -203,123 +262,95 @@
             width: 10,
             height: 60,
             color: '#FF0000',
-            moveUp: false,
-            moveDown: false,
-            speed: 5
+            score: 0
         };
 
         const ball = {
             x: canvas.width / 2,
             y: canvas.height / 2,
             radius: 10,
-            color: '#FFFFFF',
             speedX: 3,
             speedY: 3,
-            maxSpeed: 7
+            maxSpeed: 7,
+            color: '#fff'
         };
 
-        let score1 = 0;
-        let score2 = 0;
-        const WINNING_SCORE = 10;
-        let gameOver = false;
-        let gameStarted = false;
-        let hitCount = 0;
+        let upPressed = false;
+        let downPressed = false;
+        let wPressed = false;
+        let sPressed = false;
 
-        function drawRect(x, y, width, height, color) {
-            ctx.fillStyle = color;
-            ctx.fillRect(x, y, width, height);
+        function drawPlayer(player) {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
         }
 
-        function drawCircle(x, y, radius, color) {
-            ctx.fillStyle = color;
+        function drawBall() {
             ctx.beginPath();
-            ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.closePath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = ball.color;
             ctx.fill();
+            ctx.closePath();
         }
 
-        function drawLine(x, y, width, height) {
+        function drawNet() {
             ctx.setLineDash([5, 15]);
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(x, y + height);
-            ctx.strokeStyle = '#FFF';
-            ctx.lineWidth = 2;
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.strokeStyle = '#fff';
             ctx.stroke();
-            ctx.setLineDash([]);
         }
 
-        function update() {
-            if (player1.moveUp && player1.y > 0) {
-                player1.y -= player1.speed;
-            } else if (player1.moveDown && player1.y < canvas.height - player1.height) {
-                player1.y += player1.speed;
+        function movePlayer(player, up, down) {
+            if (up && player.y > 0) {
+                player.y -= 7;
+            } else if (down && player.y < canvas.height - player.height) {
+                player.y += 7;
             }
+        }
 
-            if (player2.moveUp && player2.y > 0) {
-                player2.y -= player2.speed;
-            } else if (player2.moveDown && player2.y < canvas.height - player2.height) {
-                player2.y += player2.speed;
-            }
-
+        function updateBall() {
             ball.x += ball.speedX;
             ball.y += ball.speedY;
 
-            if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
-                ball.speedY *= -1;
+            // Check for top and bottom collisions
+            if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+                ball.speedY = -ball.speedY;
+                reboundSound.play(); // Play rebound sound
             }
 
-            if (ball.x - ball.radius < 0) {
-                score2++;
-                updateScore();
-                resetBall();
-            }
-
+            // Check for left and right collisions
             if (ball.x + ball.radius > canvas.width) {
-                score1++;
-                updateScore();
+                player1Score++;
                 resetBall();
+                updateScoreDisplay();
+            } else if (ball.x - ball.radius < 0) {
+                player2Score++;
+                resetBall();
+                updateScoreDisplay();
             }
 
-            if (ball.x - ball.radius < player1.x + player1.width && ball.y > player1.y && ball.y < player1.y + player1.height) {
-                ball.speedX *= -1;
+            // Check for player collisions
+            if (ball.x - ball.radius < player1.x + player1.width &&
+                ball.y > player1.y && ball.y < player1.y + player1.height) {
+                ball.speedX = -ball.speedX;
                 ball.x = player1.x + player1.width + ball.radius;
                 hitCount++;
+                hitSound.play(); // Play hit sound
                 if (hitCount % 2 === 0 && Math.abs(ball.speedX) < ball.maxSpeed) {
                     ball.speedX += (ball.speedX > 0 ? 1 : -1);
                     ball.speedY += (ball.speedY > 0 ? 1 : -1);
                 }
-            }
-
-            if (ball.x + ball.radius > player2.x && ball.y > player2.y && ball.y < player2.y + player2.height) {
-                ball.speedX *= -1;
+            } else if (ball.x + ball.radius > player2.x &&
+                ball.y > player2.y && ball.y < player2.y + player2.height) {
+                ball.speedX = -ball.speedX;
                 ball.x = player2.x - ball.radius;
                 hitCount++;
+                hitSound.play(); // Play hit sound
                 if (hitCount % 2 === 0 && Math.abs(ball.speedX) < ball.maxSpeed) {
                     ball.speedX += (ball.speedX > 0 ? 1 : -1);
                     ball.speedY += (ball.speedY > 0 ? 1 : -1);
                 }
-            }
-        }
-
-        function updateScore() {
-            document.getElementById('score1').innerText = score1;
-            document.getElementById('score2').innerText = score2;
-
-            document.getElementById('score1').classList.add('highlight');
-            document.getElementById('score2').classList.add('highlight');
-
-            setTimeout(() => {
-                document.getElementById('score1').classList.remove('highlight');
-                document.getElementById('score2').classList.remove('highlight');
-            }, 500);
-
-            if (score1 >= WINNING_SCORE || score2 >= WINNING_SCORE) {
-                gameOver = true;
-                const winnerMessage = score1 >= WINNING_SCORE ? 'Player 1 Wins!' : 'Player 2 Wins!';
-                document.getElementById('winnerMessage').innerText = winnerMessage;
-                document.getElementById('winnerMessage').style.display = 'block';
-                document.getElementById('restartButton').style.display = 'block';
             }
         }
 
@@ -331,64 +362,87 @@
             hitCount = 0;
         }
 
-        function render() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawRect(player1.x, player1.y, player1.width, player1.height, player1.color);
-            drawRect(player2.x, player2.y, player2.width, player2.height, player2.color);
-            drawCircle(ball.x, ball.y, ball.radius, ball.color);
-            drawLine(canvas.width / 2, 0, 2, canvas.height);
-        }
+        function updateScoreDisplay() {
+            document.getElementById('score1').textContent = player1Score;
+            document.getElementById('score2').textContent = player2Score;
 
-        function gameLoop() {
-            if (!gameOver && gameStarted) {
-                update();
-                render();
-                requestAnimationFrame(gameLoop);
+            if (player1Score === winningScore || player2Score === winningScore) {
+                isGameOver = true;
+                displayWinner();
             }
         }
 
+        function displayWinner() {
+            const winnerMessage = document.getElementById('winnerMessage');
+            winnerMessage.style.display = 'block';
+            if (player1Score === winningScore) {
+                winnerMessage.textContent = 'Player 1 Wins!';
+            } else {
+                winnerMessage.textContent = 'Player 2 Wins!';
+            }
+            document.getElementById('restartButton').style.display = 'block';
+        }
+
         function startGame() {
-            gameStarted = true;
+            player1Score = 0;
+            player2Score = 0;
+            isGameOver = false;
             document.getElementById('startButton').style.display = 'none';
+            document.getElementById('winnerMessage').style.display = 'none';
+            document.getElementById('restartButton').style.display = 'none';
+            updateScoreDisplay();
+            backgroundMusic.play(); // Play background music
             gameLoop();
         }
 
         function restartGame() {
-            score1 = 0;
-            score2 = 0;
-            gameOver = false;
-            gameStarted = false;
-            document.getElementById('winnerMessage').style.display = 'none';
+            player1Score = 0;
+            player2Score = 0;
+            isGameOver = false;
             document.getElementById('restartButton').style.display = 'none';
-            document.getElementById('startButton').style.display = 'block';
-            resetBall();
+            document.getElementById('winnerMessage').style.display = 'none';
+            updateScoreDisplay();
+            backgroundMusic.play(); // Play background music
+            gameLoop();
         }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'ArrowUp') {
-                player2.moveUp = true;
-            } else if (e.code === 'ArrowDown') {
-                player2.moveDown = true;
-            }
+        function gameLoop() {
+            if (isGameOver) return;
 
-            if (e.code === 'KeyW') {
-                player1.moveUp = true;
-            } else if (e.code === 'KeyS') {
-                player1.moveDown = true;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawNet();
+            drawPlayer(player1);
+            drawPlayer(player2);
+            drawBall();
+
+            movePlayer(player1, wPressed, sPressed);
+            movePlayer(player2, upPressed, downPressed);
+            updateBall();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowUp') {
+                upPressed = true;
+            } else if (event.key === 'ArrowDown') {
+                downPressed = true;
+            } else if (event.key === 'w') {
+                wPressed = true;
+            } else if (event.key === 's') {
+                sPressed = true;
             }
         });
 
-        document.addEventListener('keyup', (e) => {
-            if (e.code === 'ArrowUp') {
-                player2.moveUp = false;
-            } else if (e.code === 'ArrowDown') {
-                player2.moveDown = false;
-            }
-
-            if (e.code === 'KeyW') {
-                player1.moveUp = false;
-            } else if (e.code === 'KeyS') {
-                player1.moveDown = false;
+        document.addEventListener('keyup', function(event) {
+            if (event.key === 'ArrowUp') {
+                upPressed = false;
+            } else if (event.key === 'ArrowDown') {
+                downPressed = false;
+            } else if (event.key === 'w') {
+                wPressed = false;
+            } else if (event.key === 's') {
+                sPressed = false;
             }
         });
 
@@ -401,6 +455,19 @@
             player2.color = e.target.value;
             render();
         });
+
+        function setMusicVolume(value) {
+            effectsVolume.music = value / 100;
+            backgroundMusic.volume = effectsVolume.music;
+            document.getElementById('musicVolumeLabel').innerText = value + '%';
+        }
+
+        function setEffectsVolume(value) {
+            effectsVolume.effects = value / 100;
+            hitSound.volume = effectsVolume.effects;
+            reboundSound.volume = effectsVolume.effects;
+            document.getElementById('effectsVolumeLabel').innerText = value + '%';
+        }
     </script>
 </body>
 </html>
