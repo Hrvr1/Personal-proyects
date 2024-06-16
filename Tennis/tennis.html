@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Videojuego de Tenis Horizontal</title>
+    <title>Tennis Game</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
         body {
             display: flex;
             justify-content: center;
@@ -15,7 +18,7 @@
             background-size: 600% 600%;
             animation: gradient 10s ease infinite;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Press Start 2P', cursive;
         }
 
         @keyframes gradient {
@@ -25,24 +28,49 @@
         }
 
         .instructions {
-            font-size: 24px;
+            font-size: 25px;
             color: #fff;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            font-family: 'Pacifico', cursive;
+            text-align: center; /* Centrar el texto de instrucciones */
         }
 
         canvas {
             border: 2px solid #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            margin-top: 10px;
+            background-color: #69696959;
+        }
+
+        .controls {
+            position: absolute;
+            font-size: 16px;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            width: 150px;
+        }
+
+        .controls.left {
+            left: 60px;
+            margin-left: 60px;
+        }
+
+        .controls.right {
+            right: 60px;
+            margin-right: 60px;
         }
 
         .score {
             position: absolute;
-            top: 20px;
+            top: 120px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 48px;
             color: #fff;
             z-index: 10;
             animation: bounce 1s infinite;
+            transition: all 0.5s ease;
         }
 
         @keyframes bounce {
@@ -50,9 +78,19 @@
             50% { transform: translateX(-50%) translateY(-10px); }
         }
 
+        .score .highlight {
+            animation: scoreChange 0.5s ease;
+        }
+
+        @keyframes scoreChange {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+
         .winner {
             position: absolute;
-            top: 40%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 48px;
@@ -72,31 +110,67 @@
         .restart button, .start button {
             font-size: 24px;
             padding: 10px 20px;
+            border-radius: 20px;
             cursor: pointer;
+            background-color: #ff6b6b;
+            border: none;
+            color: white;
+            font-family: 'Pacifico', cursive;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .restart button:hover, .start button:hover {
+            background-color: #ff4a4a;
+            transform: scale(1.1);
         }
 
         .restart {
             display: none;
         }
 
-        @keyframes explosion {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(3); opacity: 0; }
+        .color-selectors {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            width: 300px;
         }
 
-        .explosion {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: yellow;
-            border-radius: 50%;
-            z-index: 9;
-            animation: explosion 1s forwards;
+        .color-selector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+            font-family: 'Pacifico', cursive;
+        }
+
+        .color-selector label {
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="instructions">Primer jugador en llegar a 10 puntos gana</div>
+    <div class="instructions">First player to reach 10 goals wins</div>
+    <div class="color-selectors">
+        <div class="color-selector">
+            <label for="player1Color">Player 1 color:</label>
+            <input type="color" id="player1Color" value="#00FF00">
+        </div>
+        <div class="color-selector">
+            <label for="player2Color">Player 2 color:</label>
+            <input type="color" id="player2Color" value="#FF0000">
+        </div>
+    </div>
+    <div class="controls left">
+        <p>Player 1</p>
+        <p>W: Up</p>
+        <p>S: Down</p>
+    </div>
+    <div class="controls right">
+        <p>Player 2</p>
+        <p>↑: Up</p>
+        <p>↓: Down</p>
+    </div>
     <div class="score">
         <span id="score1">0</span> - <span id="score2">0</span>
     </div>
@@ -105,7 +179,7 @@
         <button onclick="startGame()">Start</button>
     </div>
     <div class="restart" id="restartButton">
-        <button onclick="restartGame()">Reiniciar Juego</button>
+        <button onclick="restartGame()">Restart</button>
     </div>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
     <script>
@@ -175,17 +249,6 @@
             ctx.setLineDash([]);
         }
 
-        function showExplosion(x, y) {
-            const explosion = document.createElement('div');
-            explosion.classList.add('explosion');
-            explosion.style.left = `${x}px`;
-            explosion.style.top = `${y}px`;
-            document.body.appendChild(explosion);
-            setTimeout(() => {
-                explosion.remove();
-            }, 1000);
-        }
-
         function update() {
             if (player1.moveUp && player1.y > 0) {
                 player1.y -= player1.speed;
@@ -208,13 +271,13 @@
 
             if (ball.x - ball.radius < 0) {
                 score2++;
-                showExplosion(ball.x, ball.y);
+                updateScore();
                 resetBall();
             }
 
             if (ball.x + ball.radius > canvas.width) {
                 score1++;
-                showExplosion(ball.x, ball.y);
+                updateScore();
                 resetBall();
             }
 
@@ -237,13 +300,23 @@
                     ball.speedY += (ball.speedY > 0 ? 1 : -1);
                 }
             }
+        }
 
+        function updateScore() {
             document.getElementById('score1').innerText = score1;
             document.getElementById('score2').innerText = score2;
 
+            document.getElementById('score1').classList.add('highlight');
+            document.getElementById('score2').classList.add('highlight');
+
+            setTimeout(() => {
+                document.getElementById('score1').classList.remove('highlight');
+                document.getElementById('score2').classList.remove('highlight');
+            }, 500);
+
             if (score1 >= WINNING_SCORE || score2 >= WINNING_SCORE) {
                 gameOver = true;
-                const winnerMessage = score1 >= WINNING_SCORE ? 'Jugador 1 Wins!' : 'Jugador 2 Wins!';
+                const winnerMessage = score1 >= WINNING_SCORE ? 'Player 1 Wins!' : 'Player 2 Wins!';
                 document.getElementById('winnerMessage').innerText = winnerMessage;
                 document.getElementById('winnerMessage').style.display = 'block';
                 document.getElementById('restartButton').style.display = 'block';
@@ -317,6 +390,16 @@
             } else if (e.code === 'KeyS') {
                 player1.moveDown = false;
             }
+        });
+
+        document.getElementById('player1Color').addEventListener('input', (e) => {
+            player1.color = e.target.value;
+            render();
+        });
+
+        document.getElementById('player2Color').addEventListener('input', (e) => {
+            player2.color = e.target.value;
+            render();
         });
     </script>
 </body>
