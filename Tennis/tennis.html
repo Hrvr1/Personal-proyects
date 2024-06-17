@@ -13,7 +13,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            height: 100vh;
+            height: 100dvh;
             background: linear-gradient(45deg, #ff6b6b, #f7c6c7, #0abde3, #4cd137);
             background-size: 600% 600%;
             animation: gradient 10s ease infinite;
@@ -38,35 +38,35 @@
         canvas {
             border: 2px solid #fff;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            margin-top: 10px;
+            margin-top: 15px;
             background-color: #69696959;
         }
 
         .controls {
             position: absolute;
-            font-size: 16px;
+            font-size: 25px;
             color: #fff;
             font-family: 'Press Start 2P', cursive;
             text-align: center;
-            width: 150px;
+            width: 200px;
         }
 
         .controls.left {
-            left: 60px;
-            margin-left: 60px;
+            left: 150px;
+            margin-left: 150px;
         }
 
         .controls.right {
-            right: 60px;
-            margin-right: 60px;
+            right: 150px;
+            margin-right: 150px;
         }
 
         .score {
             position: absolute;
-            top: 120px;
+            top: 230px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 48px;
+            font-size: 60px;
             color: #fff;
             z-index: 10;
             animation: bounce 1s infinite;
@@ -142,6 +142,7 @@
             flex-direction: column;
             align-items: center;
             color: #fff;
+            font-size: 18px;
             font-family: 'Pacifico', cursive;
         }
 
@@ -151,14 +152,15 @@
 
         .audio-controls {
             position: absolute;
-            border-radius: 20px;
+            border-radius: 40px;
             border: none;
             padding: 10px 20px;
-            font-size: 25px;
-            top: 150px;
-            left: 60px;
+            font-size: 30px;
+            top: 200px;
+            left: 100px;
+            margin-left: 100px;;
             color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             font-family: 'Pacifico', cursive;
             background-color: #ff6b6b;
         }
@@ -171,7 +173,7 @@
         .volume-label {
             margin: 0;
             padding: 0;
-            font-size: 16px;
+            font-size: 20px;
             color: #fff;
             font-family: 'Pacifico', cursive;
         }
@@ -211,11 +213,11 @@
     </div>
     <div class="audio-controls">
         <div>
-            <label class="volume-label">Music Volume: <span id="musicVolumeLabel">50%</span></label>
+            <label class="volume-label">Music volume: <span id="musicVolumeLabel">50%</span></label>
             <input type="range" id="musicVolume" class="volume-slider" min="0" max="100" value="50" oninput="setMusicVolume(this.value)">
         </div>
         <div>
-            <label class="volume-label">Effects Volume: <span id="effectsVolumeLabel">50%</span></label>
+            <label class="volume-label">Effects volume: <span id="effectsVolumeLabel">50%</span></label>
             <input type="range" id="effectsVolume" class="volume-slider" min="0" max="100" value="50" oninput="setEffectsVolume(this.value)">
         </div>
     </div>
