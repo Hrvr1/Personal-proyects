@@ -1,75 +1,13 @@
-## Personal Projects
+# Personal Projects
 
-Welcome to the **Personal Projects** repository! This repository is dedicated to showcasing and storing various personal projects, ranging from simple applications to complex systems. Below, you will find a detailed description of the current projects available, as well as instructions on how to download, set up, and run each project.
-
-### Table of Contents
-
-- [Projects](#projects)
-  - [Tennis Game](#tennis-game)
-  - [Local Chat GPT](#local-chat-gpt)
-- [Getting Started](#getting-started)
-- [Contributing](#contributing)
-- [Contact](#contact)
+Welcome to the **Personal Projects** repository! This repository is dedicated to showcasing and storing various personal projects, ranging from simple applications to complex systems. Below, you will find a list of the current projects available, each with a link to its own detailed README.
 
 ## Projects
 
-### Tennis Game
+- [Tennis Game](tennis-game/README.md)
+- [Local Chat GPT](local-chat-gpt/README.md)
 
-The **Tennis Game** project is a simple, yet entertaining browser-based game where two players can compete against each other. The game features customizable player colors, dynamic background animations, and intuitive controls.
-
-#### Features
-
-- Customizable player colors.
-- Animated background with gradient effects.
-- Intuitive controls for both players.
-- Responsive design that adapts to various screen sizes.
-
-#### How to Play
-
-1. **Controls**:
-   - **Player 1**: 
-     - Move Up: `W`
-     - Move Down: `S`
-   - **Player 2**: 
-     - Move Up: `Arrow Up`
-     - Move Down: `Arrow Down`
-2. The first player to reach 10 goals wins the game.
-
-#### Running the Game
-
-1. **Clone the repository**:
-   ```sh
-   git clone https://github.com/your-username/Personal-projects.git
-   ```
-2. **Navigate to the project directory**:
-   ```sh
-   cd Personal-projects/tennis-game
-   ```
-3. **Open `tennis.html` in your web browser**:
-   - You can open the file directly from your file explorer or use a simple HTTP server like `Live Server` in VSCode for a better experience.
-
-### Local Chat GPT
-
-The **Local Chat GPT** project allows you to run a version of ChatGPT entirely in your web browser. This project uses WebLLM to create a local instance of GPT, enabling you to have conversations without needing an internet connection.
-
-#### Features
-
-- Full-fledged ChatGPT experience in the browser.
-- No internet connection required after initial setup.
-- Real-time message display and user interaction.
-
-#### Running the Chat
-
-1. **Clone the repository**:
-   ```sh
-   git clone https://github.com/your-username/Personal-projects.git
-   ```
-2. **Navigate to the project directory**:
-   ```sh
-   cd Personal-projects/local-chat-gpt
-   ```
-3. **Open `gpt.html` in your web browser**:
-   - Similar to the Tennis Game, you can open the file directly or use a simple HTTP server.
+More projects coming soon...
 
 ## Getting Started
 
@@ -83,7 +21,7 @@ To get started with any project in this repository:
    ```sh
    cd Personal-projects/project-name
    ```
-3. **Follow the specific instructions provided for each project to set up and run them.**
+3. **Follow the specific instructions provided in the project's README to set up and run them.**
 
 ## Contributing
 
@@ -106,7 +44,7 @@ Contributions are welcome! If you have any improvements, bug fixes, or new featu
 
 ## Contact
 
-For any inquiries or suggestions, please feel free to contact me at [Hrvaldes22@gmail.com](Hrvaldes22@gmail.com).
+For any inquiries or suggestions, please feel free to contact me at [Hrvaldes22@gmail.com](mailto:Hrvaldes22@gmail.com).
 
 ---
 
