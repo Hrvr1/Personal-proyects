@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle, #000428, #004e92);
+            font-family: 'Press Start 2P', cursive;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        #gameCanvas {
+            border: 10px solid #fff;
+            background-color: #000;
+            image-rendering: pixelated;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .centered-button, .game-over-container {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .centered-button button, .game-over-container button {
+            padding: 20px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #ff4757;
+            color: #fff;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .centered-button button:hover, .game-over-container button:hover {
+            background: #e84118;
+            transform: scale(1.1);
+        }
+
+        .game-over-container {
+            display: none;
+            text-align: center;
+            font-size: 48px;
+            animation: fadeIn 1s;
+        }
+
+        .game-over-container button {
+            margin-top: 20px;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+
+        .info div {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            font-size: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        #countdown {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s;
+        }
+
+        @keyframes heartSpin {
+            0% { background-image: url('/hearts/heart-first-frame.png'); }
+            25% { background-image: url('/hearts/heart-second-frame.png'); }
+            50% { background-image: url('/hearts/heart-third-frame.png'); }
+            100% { background-image: url('/hearts/heart-last-frame.png'); }
+            50% { background-image: url('/hearts/heart-third-frame.png'); }
+            25% { background-image: url('/hearts/heart-second-frame.png'); }
+        }
+
+        .heart {
+            width: 50px;
+            height: 50px;
+            background-size: cover;
+            animation: heartSpin 1s steps(4) infinite;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        #hearts-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <div id="score">Score: 0</div>
+        <div id="total-score">Total Score: 0</div>
+    </div>
+    <div id="hearts-container"></div>
+    <button onclick="startGame()">Start</button>
+    <div class="game-over">
+        Game Over
+        <button onclick="startGame()">Restart</button>
+    </div>
+    <div id="countdown">Ready? 2</div>
+    <canvas id="gameCanvas" width="500" height="500"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gridSize = 10;
+        const cellSize = canvas.width / gridSize;
+        const trainSpeed = 250;
+        let train = [];
+        let people = {};
+        let direction;
+        let gameInterval;
+        let isGameOver = false;
+        let score = 0;
+        let totalScore = 0;
+        let lives = 3;
+        let readyCountdown;
+
+        function drawBoard() {
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    ctx.fillStyle = (row + col) % 2 === 0 ? '#2c3e50' : '#34495e';
+                    ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+
+        function drawTrain() {
+            train.forEach((segment, index) => {
+                ctx.fillStyle = index === 0 ? '#f1c40f' : '#e67e22';
+                ctx.fillRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
+                ctx.strokeStyle = '#2c3e50';
+                ctx.strokeRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
+            });
+        }
+
+        function drawPeople() {
+            if (people) {
+                ctx.fillStyle = '#e74c3c';
+                ctx.beginPath();
+                ctx.arc((people.x + 0.5) * cellSize, (people.y + 0.5) * cellSize, cellSize / 2, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
+
+        function updateGame() {
+            if (isGameOver) return;
+            const head = { ...train[0] };
+            if (direction === 'right') head.x += 1;
+            if (direction === 'left') head.x -= 1;
+            if (direction === 'up') head.y -= 1;
+            if (direction === 'down') head.y += 1;
+
+            if (head.x === people.x && head.y === people.y) {
+                score += 150;
+                train.push({});
+                people = null;
+                placePeople();
+            } else {
+                train.pop();
+            }
+
+            train.unshift(head);
+
+            if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize || trainCollision()) {
+                lives -= 1;
+                updateHearts();
+                if (lives > 0) {
+                    clearInterval(gameInterval);
+                    showReadyCountdown();
+                } else {
+                    gameOver();
+                }
+            } else {
+                draw();
+            }
+
+            updateScore();
+        }
+
+        function trainCollision() {
+            for (let i = 1; i < train.length; i++) {
+                if (train[i].x === train[0].x && train[i].y === train[0].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function placePeople() {
+            let newPeoplePosition;
+            do {
+                newPeoplePosition = {
+                    x: Math.floor(Math.random() * gridSize),
+                    y: Math.floor(Math.random() * gridSize)
+                };
+            } while (train.some(segment => segment.x === newPeoplePosition.x && segment.y === newPeoplePosition.y));
+            people = newPeoplePosition;
+            if (!isGameOver) {
+                draw();
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBoard();
+            drawTrain();
+            drawPeople();
+        }
+
+        function startGame() {
+            document.querySelector('button').style.display = 'none';
+            document.querySelector('.game-over').style.display = 'none';
+            initializeTrain();
+            direction = getRandomDirection();
+            isGameOver = false;
+            score = 0;
+            lives = 3;
+            totalScore = 0;
+            clearInterval(gameInterval);
+            gameInterval = setInterval(updateGame, trainSpeed);
+            placePeople();
+            draw();
+            updateScore();
+            updateHearts();
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            clearInterval(gameInterval);
+            totalScore += score;
+            document.querySelector('.game-over').style.display = 'block';
+            updateScore();
+            updateHearts();
+        }
+
+        function getRandomDirection() {
+            const directions = ['up', 'down', 'left', 'right'];
+            return directions[Math.floor(Math.random() * directions.length)];
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = `Score: ${score}`;
+            document.getElementById('total-score').innerText = `Total Score: ${totalScore}`;
+            document.getElementById('lives').innerText = `Lives: ${lives}`;
+        }
+
+        function resetTrain() {
+            initializeTrain();
+            direction = getRandomDirection();
+            placePeople();
+            draw();
+        }
+
+        function initializeTrain() {
+            let startX, startY;
+            do {
+                startX = Math.floor(Math.random() * (gridSize - 4)) + 2; 
+                startY = Math.floor(Math.random() * (gridSize - 4)) + 2; 
+            } while (startX <= 1 || startX >= gridSize - 2 || startY <= 1 || startY >= gridSize - 2);
+
+            train = [{ x: startX, y: startY }, { x: startX - 1, y: startY }];
+        }
+
+        function showReadyCountdown() {
+            let countdown = 2;
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.innerText = `Ready? ${countdown}`;
+            countdownElement.style.display = 'block';
+            totalScore += score;
+            score = 0;
+
+            readyCountdown = setInterval(() => {
+                countdown -= 1;
+                countdownElement.innerText = `Ready? ${countdown}`;
+                if (countdown === 0) {
+                    clearInterval(readyCountdown);
+                    countdownElement.style.display = 'none';
+                    resetTrain();
+                    gameInterval = setInterval(updateGame, trainSpeed);
+                }
+            }, 1000);
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'ArrowUp' && direction !== 'down') direction = 'up';
+            if (event.key === 'ArrowDown' && direction !== 'up') direction = 'down';
+            if (event.key === 'ArrowLeft' && direction !== 'right') direction = 'left';
+            if (event.key === 'ArrowRight' && direction !== 'left') direction = 'right';
+        });
+
+        drawBoard(); // Initial board draw, no train or people until start
+
+        document.addEventListener("DOMContentLoaded", function() {
+            updateHearts();
+        });
+
+        function updateHearts() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+
+            for (let i = 0; i < lives; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+    </script>
+</body>
+</html>
