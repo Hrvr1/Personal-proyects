@@ -4,8 +4,8 @@ Welcome to the **Personal Projects** repository! This repository is dedicated to
 
 ## Projects
 
-- [Tennis Game](tennis-game/README.md)
-- [Local Chat GPT](local-chat-gpt/README.md)
+- [Tennis Game](Tennis/README.md)
+- [Local Chat GPT](ChatGPT-Local/README.md)
 
 More projects coming soon...
 
