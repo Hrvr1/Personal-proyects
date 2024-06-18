@@ -8,17 +8,23 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            height: 100dvh;
+            min-height: 100vh;
             background: linear-gradient(45deg, #ff6b6b, #f7c6c7, #0abde3, #4cd137);
             background-size: 600% 600%;
             animation: gradient 10s ease infinite;
-            margin: 0;
             font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
         }
 
         @keyframes gradient {
@@ -28,9 +34,9 @@
         }
 
         .instructions {
-            font-size: 25px;
+            font-size: 1.5rem;
             color: #fff;
-            margin-bottom: 20px;
+            margin-top: 0%;
             font-family: 'Pacifico', cursive;
             text-align: center;
         }
@@ -38,39 +44,38 @@
         canvas {
             border: 2px solid #fff;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            margin-top: 10px;
             background-color: #69696959;
+            max-width: 100%;
+            height: auto;
         }
 
         .controls {
             position: absolute;
-            font-size: 16px;
+            font-size: 1rem;
             color: #fff;
             font-family: 'Press Start 2P', cursive;
             text-align: center;
-            width: 150px;
+            width: 160px;
+            line-height: 1.5rem;
         }
 
         .controls.left {
-            left: 60px;
-            margin-left: 60px;
+            left: 6rem;
         }
 
         .controls.right {
-            right: 60px;
-            margin-right: 60px;
+            right: 6rem;
         }
 
         .score {
             position: absolute;
-            top: 120px;
+            top: 20rem;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 48px;
+            font-size: 2.3rem;
             color: #fff;
             z-index: 10;
             animation: bounce 1s infinite;
-            transition: all 0.5s ease;
         }
 
         @keyframes bounce {
@@ -78,25 +83,16 @@
             50% { transform: translateX(-50%) translateY(-10px); }
         }
 
-        .score .highlight {
-            animation: scoreChange 0.5s ease;
-        }
-
-        @keyframes scoreChange {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.5); }
-            100% { transform: scale(1); }
-        }
-
         .winner {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 48px;
+            font-size: 2.5rem;
             color: #fff;
             display: none;
             z-index: 10;
+            text-align: center;
         }
 
         .restart, .start {
@@ -108,9 +104,9 @@
         }
 
         .restart button, .start button {
-            font-size: 24px;
-            padding: 10px 20px;
-            border-radius: 20px;
+            font-size: 1.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
             cursor: pointer;
             background-color: #ff6b6b;
             border: none;
@@ -118,7 +114,6 @@
             font-family: 'Pacifico', cursive;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            cursor: pointer;
         }
 
         .restart button:hover, .start button:hover {
@@ -133,8 +128,9 @@
         .color-selectors {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            width: 300px;
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 400px;
         }
 
         .color-selector {
@@ -146,39 +142,40 @@
         }
 
         .color-selector label {
-            margin-bottom: 5px;
+            margin-bottom: 0.5rem;
         }
 
         .audio-controls {
             position: absolute;
-            border-radius: 20px;
+            border-radius: 40px;
             border: none;
-            padding: 10px 20px;
-            font-size: 25px;
-            top: 150px;
-            left: 60px;
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+            top: 8rem;
+            left: 6rem;
             color: #fff;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             font-family: 'Pacifico', cursive;
             background-color: #ff6b6b;
+            width: 303px;
         }
 
         .volume-slider {
-            width: 150px;
+            width: 100%;
             cursor: pointer;
         }
 
         .volume-label {
-            margin: 0;
+            margin: 4rem;
             padding: 0;
-            font-size: 16px;
+            font-size: 1rem;
             color: #fff;
             font-family: 'Pacifico', cursive;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="instructions">First player to reach 10 goals wins</div>
     <div class="color-selectors">
         <div class="color-selector">
             <label for="player1Color">Player 1 color:</label>
@@ -223,6 +220,7 @@
     <audio id="backgroundMusic" src="sounds/game-music.mp3" loop></audio>
     <audio id="hitSound" src="sounds/hit.wav"></audio>
     <audio id="reboundSound" src="sounds/rebound.wav"></audio>
+    <div class="instructions">First player to reach 10 goals wins</div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -391,7 +389,6 @@
             document.getElementById('winnerMessage').style.display = 'none';
             document.getElementById('restartButton').style.display = 'none';
             updateScoreDisplay();
-            backgroundMusic.play(); // Play background music
             gameLoop();
         }
 
@@ -402,7 +399,6 @@
             document.getElementById('restartButton').style.display = 'none';
             document.getElementById('winnerMessage').style.display = 'none';
             updateScoreDisplay();
-            backgroundMusic.play(); // Play background music
             gameLoop();
         }
 
@@ -468,6 +464,8 @@
             reboundSound.volume = effectsVolume.effects;
             document.getElementById('effectsVolumeLabel').innerText = value + '%';
         }
+
+        backgroundMusic.play();
     </script>
 </body>
 </html>
