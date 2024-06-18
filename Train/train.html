@@ -10,9 +10,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100dvh;
             margin: 0;
-            background: radial-gradient(circle, #000428, #004e92);
+            background: linear-gradient(to right, #f83a3a, #ff5f6d, #fb933d, #ffc371, #9bf84f, #4ff8ed, #2e91f4, #ff5ff7, #fb46b3);
             font-family: 'Press Start 2P', cursive;
             color: #fff;
             overflow: hidden;
@@ -21,10 +21,20 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
         #gameCanvas {
-            border: 10px solid #fff;
-            background-color: #000;
+            border: 15px solid #fff;
+            background-color: #111;
             image-rendering: pixelated;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.7);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 20px #fff;
+            }
+            to {
+                box-shadow: 0 0 40px #ff6f61;
+            }
         }
 
         .centered-button, .game-over-container {
@@ -35,14 +45,14 @@
             justify-content: center;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
         }
 
         .centered-button button, .game-over-container button {
-            padding: 20px 40px;
+            padding: 15px 30px;
             font-size: 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             background: #ff4757;
             color: #fff;
@@ -81,6 +91,27 @@
             font-size: 20px;
         }
 
+        .hearts-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .heart {
+            font-size: 32px;
+            margin: 0 5px;
+            animation: heartbeat 1s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -93,60 +124,69 @@
         #countdown {
             display: none;
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             font-size: 48px;
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 1s;
-        }
-
-        @keyframes heartSpin {
-            0% { background-image: url('/hearts/heart-first-frame.png'); }
-            25% { background-image: url('/hearts/heart-second-frame.png'); }
-            50% { background-image: url('/hearts/heart-third-frame.png'); }
-            100% { background-image: url('/hearts/heart-last-frame.png'); }
-            50% { background-image: url('/hearts/heart-third-frame.png'); }
-            25% { background-image: url('/hearts/heart-second-frame.png'); }
-        }
-
-        .heart {
-            width: 50px;
-            height: 50px;
-            background-size: cover;
-            animation: heartSpin 1s steps(4) infinite;
-            display: inline-block;
-            margin: 0 5px;
-        }
-
-        #hearts-container {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
     <div class="info">
         <div id="score">Score: 0</div>
+        <div id="hearts-container" class="hearts-container"></div>
         <div id="total-score">Total Score: 0</div>
     </div>
-    <div id="hearts-container"></div>
-    <button onclick="startGame()">Start</button>
-    <div class="game-over">
-        Game Over
-        <button onclick="startGame()">Restart</button>
+    <div class="centered-button">
+        <button class="btn-primary" onclick="startGame()">Start</button>
     </div>
-    <div id="countdown">Ready? 2</div>
-    <canvas id="gameCanvas" width="500" height="500"></canvas>
+    <div class="game-over-container">
+        Game Over
+        <button class="btn-primary" onclick="startGame()">Restart</button>
+    </div>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <div id="countdown">4</div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const gridSize = 10;
+        const gridSize = 15;
         const cellSize = canvas.width / gridSize;
         const trainSpeed = 250;
         let train = [];
@@ -162,7 +202,7 @@
         function drawBoard() {
             for (let row = 0; row < gridSize; row++) {
                 for (let col = 0; col < gridSize; col++) {
-                    ctx.fillStyle = (row + col) % 2 === 0 ? '#2c3e50' : '#34495e';
+                    ctx.fillStyle = (row + col) % 2 === 0 ? '#2e91f4' : '#4fa4f8';
                     ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
                 }
             }
@@ -208,9 +248,11 @@
             if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize || trainCollision()) {
                 lives -= 1;
                 updateHearts();
+                totalScore += score;
+                updateTotalScore();
                 if (lives > 0) {
                     clearInterval(gameInterval);
-                    showReadyCountdown();
+                    showCountdownAndRestart();
                 } else {
                     gameOver();
                 }
@@ -252,103 +294,95 @@
         }
 
         function startGame() {
-            document.querySelector('button').style.display = 'none';
-            document.querySelector('.game-over').style.display = 'none';
-            initializeTrain();
-            direction = getRandomDirection();
-            isGameOver = false;
+            document.querySelector('.centered-button').style.display = 'none';
+            document.querySelector('.game-over-container').style.display = 'none';
             score = 0;
-            lives = 3;
             totalScore = 0;
-            clearInterval(gameInterval);
-            gameInterval = setInterval(updateGame, trainSpeed);
+            lives = 3;
+            train = [
+                { x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) },
+                { x: Math.floor(gridSize / 2) - 1, y: Math.floor(gridSize / 2) }
+            ];
+            direction = 'right';
             placePeople();
-            draw();
-            updateScore();
             updateHearts();
-        }
-
-        function gameOver() {
-            isGameOver = true;
-            clearInterval(gameInterval);
-            totalScore += score;
-            document.querySelector('.game-over').style.display = 'block';
             updateScore();
-            updateHearts();
-        }
-
-        function getRandomDirection() {
-            const directions = ['up', 'down', 'left', 'right'];
-            return directions[Math.floor(Math.random() * directions.length)];
+            updateTotalScore();
+            clearInterval(readyCountdown);
+            document.getElementById('countdown').style.display = 'none';
+            document.querySelector('.hearts-container').style.display = 'flex';
+            isGameOver = false;
+            gameInterval = setInterval(updateGame, trainSpeed);
         }
 
         function updateScore() {
-            document.getElementById('score').innerText = `Score: ${score}`;
-            document.getElementById('total-score').innerText = `Total Score: ${totalScore}`;
-            document.getElementById('lives').innerText = `Lives: ${lives}`;
+            document.getElementById('score').textContent = `Score: ${score}`;
         }
 
-        function resetTrain() {
-            initializeTrain();
-            direction = getRandomDirection();
-            placePeople();
-            draw();
+        function updateTotalScore() {
+            document.getElementById('total-score').textContent = `Total Score: ${totalScore}`;
         }
 
-        function initializeTrain() {
-            let startX, startY;
-            do {
-                startX = Math.floor(Math.random() * (gridSize - 4)) + 2; 
-                startY = Math.floor(Math.random() * (gridSize - 4)) + 2; 
-            } while (startX <= 1 || startX >= gridSize - 2 || startY <= 1 || startY >= gridSize - 2);
-
-            train = [{ x: startX, y: startY }, { x: startX - 1, y: startY }];
+        function updateHearts() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < lives; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                heartsContainer.appendChild(heart);
+            }
         }
 
-        function showReadyCountdown() {
-            let countdown = 2;
-            const countdownElement = document.getElementById('countdown');
-            countdownElement.innerText = `Ready? ${countdown}`;
-            countdownElement.style.display = 'block';
-            totalScore += score;
-            score = 0;
-
+        function showCountdownAndRestart() {
+            const countdown = document.getElementById('countdown');
+            let timeLeft = 4;
+            countdown.textContent = timeLeft;
+            countdown.style.display = 'flex';
             readyCountdown = setInterval(() => {
-                countdown -= 1;
-                countdownElement.innerText = `Ready? ${countdown}`;
-                if (countdown === 0) {
+                timeLeft -= 1;
+                countdown.textContent = timeLeft;
+                const degrees = (timeLeft / 4) * 360;
+                countdown.style.background = `conic-gradient(
+                    rgba(0, 0, 0, 0.7) ${degrees}deg,
+                    transparent ${degrees}deg 360deg
+                )`;
+                if (timeLeft <= 0) {
                     clearInterval(readyCountdown);
-                    countdownElement.style.display = 'none';
-                    resetTrain();
-                    gameInterval = setInterval(updateGame, trainSpeed);
+                    countdown.style.display = 'none';
+                    restartAfterCountdown();
                 }
             }, 1000);
         }
 
-        document.addEventListener('keydown', event => {
+        function restartAfterCountdown() {
+            train = [
+                { x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) },
+                { x: Math.floor(gridSize / 2) - 1, y: Math.floor(gridSize / 2) }
+            ];
+            placePeople();
+            direction = 'right';
+            score = 0;
+            gameInterval = setInterval(updateGame, trainSpeed);
+        }
+
+        function gameOver() {
+            clearInterval(gameInterval);
+            document.querySelector('.game-over-container').style.display = 'flex';
+            document.querySelector('.hearts-container').style.display = 'none';
+            isGameOver = true;
+        }
+
+        document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowUp' && direction !== 'down') direction = 'up';
             if (event.key === 'ArrowDown' && direction !== 'up') direction = 'down';
             if (event.key === 'ArrowLeft' && direction !== 'right') direction = 'left';
             if (event.key === 'ArrowRight' && direction !== 'left') direction = 'right';
         });
 
-        drawBoard(); // Initial board draw, no train or people until start
-
-        document.addEventListener("DOMContentLoaded", function() {
-            updateHearts();
-        });
-
-        function updateHearts() {
-            const heartsContainer = document.getElementById('hearts-container');
-            heartsContainer.innerHTML = '';
-
-            for (let i = 0; i < lives; i++) {
-                const heart = document.createElement('div');
-                heart.classList.add('heart');
-                heartsContainer.appendChild(heart);
-            }
-        }
-
+        document.getElementById('countdown').style.display = 'none';
+        updateHearts();
+        draw();
     </script>
 </body>
 </html>
