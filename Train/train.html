@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Train Game</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
         body {
             display: flex;
             flex-direction: column;
@@ -12,20 +14,38 @@
             align-items: center;
             height: 100dvh;
             margin: 0;
-            background: linear-gradient(to right, #f83a3a, #ff5f6d, #fb933d, #ffc371, #9bf84f, #4ff8ed, #2e91f4, #ff5ff7, #fb46b3);
+            background-image: url('images/sky.jpg');
+            background-attachment: fixed;
+            background-size: 70%;
+            background-position: center;
             font-family: 'Press Start 2P', cursive;
             color: #fff;
             overflow: hidden;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        #windowContainer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
+        #windowImage {
+            position: absolute;
+            width: 100%;
+            height: 150%;
+            z-index: 1;
+            pointer-events: none;
+        }
         #gameCanvas {
-            border: 15px solid #fff;
+            border: 6px solid #fff;
             background-color: #111;
-            image-rendering: pixelated;
+            image-rendering: optimizeQuality;
             box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.7);
             animation: glow 1.5s infinite alternate;
+            opacity: 0.6;
         }
 
         @keyframes glow {
@@ -76,30 +96,33 @@
         }
 
         .info {
+            position: absolute;
+            top: 20px;
+            right: 25rem;
             display: flex;
-            justify-content: space-around;
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 20px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            z-index: 3;
         }
 
         .info div {
             background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            font-size: 20px;
+            padding: 0.4rem;
+            border-radius: 5rem;
+            font-size: 1rem;
         }
 
         .hearts-container {
             display: flex;
             justify-content: center;
+            flex-direction: column;
             align-items: center;
         }
 
         .heart {
             font-size: 32px;
-            margin: 0 5px;
+            margin: 5px;
             animation: heartbeat 1s infinite;
         }
 
@@ -124,7 +147,7 @@
         #countdown {
             display: none;
             position: absolute;
-            font-size: 48px;
+            font-size: 38px;
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 50%;
@@ -174,16 +197,26 @@
         <div id="hearts-container" class="hearts-container"></div>
         <div id="total-score">Total Score: 0</div>
     </div>
+    <div id="windowContainer">
+        <img id="windowImage" src="images/window.png" alt="Window">
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+    </div>
     <div class="centered-button">
-        <button class="btn-primary" onclick="startGame()">Start</button>
+        <button class="btn-primary" onclick="startGame()">Start trip</button>
     </div>
     <div class="game-over-container">
-        Game Over
-        <button class="btn-primary" onclick="startGame()">Restart</button>
+        Your trip ends here
+        <button class="btn-primary" onclick="startGame()">Buy another ticket</button>
     </div>
-    <canvas id="gameCanvas" width="600" height="600"></canvas>
     <div id="countdown">4</div>
     <script>
+
+        /**
+         * ! Solucionar el problema de info
+         * ! Crece el tren +2 y no +1
+         * * AÑADIR CONTROLES VISIBLES
+         * ? Intentar cambiar las imagenes
+        */
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const gridSize = 15;
@@ -199,10 +232,19 @@
         let lives = 3;
         let readyCountdown;
 
+        const headImg = new Image();
+        headImg.src = 'images/locomotive.png';
+
+        const bodyImg = new Image();
+        bodyImg.src = 'images/wagon.png';
+
+        const peopleImg = new Image();
+        peopleImg.src = 'images/people.png';
+
         function drawBoard() {
             for (let row = 0; row < gridSize; row++) {
                 for (let col = 0; col < gridSize; col++) {
-                    ctx.fillStyle = (row + col) % 2 === 0 ? '#2e91f4' : '#4fa4f8';
+                    ctx.fillStyle = (row + col) % 2 === 0 ? '#fff' : '#ffc';
                     ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
                 }
             }
@@ -210,22 +252,40 @@
 
         function drawTrain() {
             train.forEach((segment, index) => {
-                ctx.fillStyle = index === 0 ? '#f1c40f' : '#e67e22';
-                ctx.fillRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
-                ctx.strokeStyle = '#2c3e50';
-                ctx.strokeRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
+                const img = index === 0 ? headImg : bodyImg;
+                const { x, y } = segment;
+
+                ctx.save();
+
+                ctx.translate(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2);
+
+                switch (direction) {
+                    case 'up':
+                        ctx.rotate(Math.PI / 2);
+                        break;
+                    case 'down':
+                        ctx.rotate(-Math.PI / 2);
+                        break;
+                    case 'left':
+                        ctx.rotate(0);
+                        break;
+                    case 'right':
+                        ctx.rotate(Math.PI);
+                        break;
+                }
+
+                ctx.drawImage(img, -cellSize / 2, -cellSize / 2, cellSize, cellSize);
+
+                ctx.restore();
             });
         }
 
         function drawPeople() {
             if (people) {
-                ctx.fillStyle = '#e74c3c';
-                ctx.beginPath();
-                ctx.arc((people.x + 0.5) * cellSize, (people.y + 0.5) * cellSize, cellSize / 2, 0, 2 * Math.PI);
-                ctx.fill();
+                ctx.drawImage(peopleImg, people.x * cellSize, people.y * cellSize, cellSize, cellSize);
             }
         }
-
+        
         function updateGame() {
             if (isGameOver) return;
             const head = { ...train[0] };
