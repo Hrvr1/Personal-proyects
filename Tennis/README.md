@@ -52,6 +52,12 @@ Contributions are welcome! If you have any improvements, bug fixes, or new featu
    ```
 5. Open a pull request.
 
+## License
+
+This project is licensed under a Proprietary License. You are allowed to use the code to submit improvements and contributions, but you are not allowed to copy it or use it in your own projects without explicit permission.
+
+© [Hugo Redondo Valdés] 2024. All rights reserved.
+
 ## Contact
 
 For any inquiries or suggestions, please feel free to contact me at [Hrvaldes22@gmail.com](mailto:Hrvaldes22@gmail.com).
