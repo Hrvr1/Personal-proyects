@@ -189,9 +189,75 @@
             background: #2980b9;
             transform: scale(1.1);
         }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            gap: 1rem;
+        }
+
+        .controls button {
+            width: 60px;
+            height: 60px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .controls button:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .arrow button {
+            animation: keyPressAnimation 0.3s;
+        }
+
+        @keyframes keyPressAnimation {
+            0% {
+                transform: scale(1);
+                background-color: #3498db;
+            }
+            50% {
+                transform: scale(1.2);
+                background-color: #2980b9;
+            }
+            100% {
+                transform: scale(1);
+                background-color: #3498db;
+            }
+        }
+
     </style>
 </head>
 <body>
+    <div class="controls">
+        <div class="arrow">
+            <button id="up">↑</button>
+        </div>
+        <div class="arrow">
+            <button id="left">←</button>
+            <button id="right">→</button>
+        </div>
+        <div class="arrow">
+            <button id="down">↓</button>
+        </div>
+    </div>
     <div class="info">
         <div id="score">Score: 0</div>
         <div id="hearts-container" class="hearts-container"></div>
@@ -213,8 +279,7 @@
 
         /**
          * ! Solucionar el problema de info
-         * ! Crece el tren +2 y no +1
-         * * AÑADIR CONTROLES VISIBLES
+         * * AÑADIR CONTROLES VISIBLES CON ANIMACION
          * ? Intentar cambiar las imagenes
         */
         const canvas = document.getElementById('gameCanvas');
@@ -438,7 +503,33 @@
             if (event.key === 'ArrowDown' && direction !== 'up') direction = 'down';
             if (event.key === 'ArrowLeft' && direction !== 'right') direction = 'left';
             if (event.key === 'ArrowRight' && direction !== 'left') direction = 'right';
+            animateButton(event.key);
         });
+
+        function animateButton(key) {
+            let buttonId;
+            switch (key) {
+                case 'ArrowUp':
+                    buttonId = 'up';
+                    break;
+                case 'ArrowDown':
+                    buttonId = 'down';
+                    break;
+                case 'ArrowLeft':
+                    buttonId = 'left';
+                    break;
+                case 'ArrowRight':
+                    buttonId = 'right';
+                    break;
+            }
+            const button = document.getElementById(buttonId);
+            if (button) {
+                button.style.animation = 'keyPressAnimation 0.3s';
+                button.addEventListener('animationend', () => {
+                    button.style.animation = '';
+                });
+            }
+        }
 
         document.getElementById('countdown').style.display = 'none';
         updateHearts();
