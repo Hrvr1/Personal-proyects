@@ -195,28 +195,44 @@
             flex-direction: column;
             align-items: center;
             position: absolute;
-            left: 2rem;
+            left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .controls button {
             width: 60px;
             height: 60px;
-            background-color: #3498db;
+            background-color: #1abc9c;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50%;
             font-size: 24px;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls button.pressed {
+            transform: scale(0.9);
+            background-color: #16a085;
+            box-shadow: none;
+            transition: all 0.1s;
         }
 
         .controls button:hover {
-            background-color: #2980b9;
             transform: scale(1.1);
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+            background-color: #16a085;
         }
+
+        .controls .shift {
+            width: 80px;
+            height: 60px;
+            font-size: 20px;
+        }
+
 
         .arrow {
             display: flex;
@@ -243,6 +259,31 @@
             }
         }
 
+        /* Animación de llamas */
+        @keyframes flame {
+            0% {
+                background: radial-gradient(circle, rgba(255, 100, 0, 0.9), rgba(255, 165, 0, 0.5), rgba(255, 255, 0, 0));
+                box-shadow: 0 0 15px rgba(255, 100, 0, 0.5);
+            }
+            50% {
+                background: radial-gradient(circle, rgba(255, 200, 0, 0.9), rgba(255, 100, 0, 0.7), rgba(255, 0, 0, 0));
+                box-shadow: 0 0 25px rgba(255, 200, 0, 0.7);
+            }
+            100% {
+                background: radial-gradient(circle, rgba(255, 50, 0, 0.9), rgba(255, 150, 0, 0.5), rgba(255, 255, 0, 0));
+                box-shadow: 0 0 10px rgba(255, 50, 0, 0.5);
+            }
+        }
+
+        /* Estilo del botón de Shift para aplicar la animación de llamas */
+        .controls .shift.flame-effect {
+            animation: flame 0.5s infinite;
+            background-color: rgba(255, 100, 0, 0.9);
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+
     </style>
 </head>
 <body>
@@ -256,6 +297,9 @@
         </div>
         <div class="arrow">
             <button id="down">↓</button>
+        </div>
+        <div class="arrow">
+            <button id="shift" class="shift">Shift</button> <!-- Nuevo botón de booster -->
         </div>
     </div>
     <div class="info">
@@ -278,8 +322,6 @@
     <script>
 
         /**
-         * ! Solucionar el problema de info
-         * * AÑADIR CONTROLES VISIBLES CON ANIMACION
          * ? Intentar cambiar las imagenes
         */
         const canvas = document.getElementById('gameCanvas');
@@ -296,6 +338,9 @@
         let totalScore = 0;
         let lives = 3;
         let readyCountdown;
+        let boostActive = false; // Booster desactivado inicialmente
+        let normalSpeed = 250;   // Velocidad normal
+        let boostSpeed = 100;    // Velocidad con booster
 
         const headImg = new Image();
         headImg.src = 'images/locomotive.png';
@@ -353,6 +398,7 @@
         
         function updateGame() {
             if (isGameOver) return;
+
             const head = { ...train[0] };
             if (direction === 'right') head.x += 1;
             if (direction === 'left') head.x -= 1;
@@ -371,15 +417,23 @@
             train.unshift(head);
 
             if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize || trainCollision()) {
+                // Si hay colisión, restablecemos la velocidad normal y desactivamos el booster
+                if (boostActive) {
+                    boostActive = false;
+                    clearInterval(gameInterval);
+                    gameInterval = setInterval(updateGame, normalSpeed); // Restauramos la velocidad normal
+                }
+                
                 lives -= 1;
                 updateHearts();
                 totalScore += score;
                 updateTotalScore();
+
                 if (lives > 0) {
                     clearInterval(gameInterval);
-                    showCountdownAndRestart();
+                    showCountdownAndRestart();  // Reiniciar con la cuenta regresiva
                 } else {
-                    gameOver();
+                    gameOver();  // Terminar el juego si no hay más vidas
                 }
             } else {
                 draw();
@@ -387,6 +441,7 @@
 
             updateScore();
         }
+
 
         function trainCollision() {
             for (let i = 1; i < train.length; i++) {
@@ -464,6 +519,7 @@
             let timeLeft = 4;
             countdown.textContent = timeLeft;
             countdown.style.display = 'flex';
+            
             readyCountdown = setInterval(() => {
                 timeLeft -= 1;
                 countdown.textContent = timeLeft;
@@ -472,15 +528,17 @@
                     rgba(0, 0, 0, 0.7) ${degrees}deg,
                     transparent ${degrees}deg 360deg
                 )`;
+                
                 if (timeLeft <= 0) {
                     clearInterval(readyCountdown);
                     countdown.style.display = 'none';
-                    restartAfterCountdown();
+                    restartAfterCountdown();  // Reiniciar el juego después de la cuenta regresiva
                 }
             }, 1000);
         }
 
         function restartAfterCountdown() {
+            // Reinicio del tren y la gente
             train = [
                 { x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) },
                 { x: Math.floor(gridSize / 2) - 1, y: Math.floor(gridSize / 2) }
@@ -488,8 +546,12 @@
             placePeople();
             direction = 'right';
             score = 0;
-            gameInterval = setInterval(updateGame, trainSpeed);
+
+            // Aseguramos que el juego reinicie con velocidad normal, sin booster
+            clearInterval(gameInterval);
+            gameInterval = setInterval(updateGame, normalSpeed);  // Reiniciar con velocidad normal
         }
+
 
         function gameOver() {
             clearInterval(gameInterval);
@@ -498,15 +560,7 @@
             isGameOver = true;
         }
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowUp' && direction !== 'down') direction = 'up';
-            if (event.key === 'ArrowDown' && direction !== 'up') direction = 'down';
-            if (event.key === 'ArrowLeft' && direction !== 'right') direction = 'left';
-            if (event.key === 'ArrowRight' && direction !== 'left') direction = 'right';
-            animateButton(event.key);
-        });
-
-        function animateButton(key) {
+        function toggleButtonState(key, isPressed) {
             let buttonId;
             switch (key) {
                 case 'ArrowUp':
@@ -521,15 +575,63 @@
                 case 'ArrowRight':
                     buttonId = 'right';
                     break;
+                case 'Shift':
+                    buttonId = 'shift';
+                    break;
             }
+            
             const button = document.getElementById(buttonId);
             if (button) {
-                button.style.animation = 'keyPressAnimation 0.3s';
-                button.addEventListener('animationend', () => {
-                    button.style.animation = '';
-                });
+                if (isPressed) {
+                    if (key === 'Shift') {
+                        button.classList.add('flame-effect');  // Aplicar efecto de llamas
+                    } else {
+                        button.classList.add('pressed');  // Reducir tamaño de otros controles
+                    }
+                } else {
+                    if (key === 'Shift') {
+                        button.classList.remove('flame-effect');  // Remover efecto de llamas
+                    } else {
+                        button.classList.remove('pressed');  // Restaurar tamaño de otros controles
+                    }
+                }
             }
         }
+
+        // Evento de teclado para manejar las teclas y activar las animaciones visuales
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowUp' && direction !== 'down') {
+                direction = 'up';
+            }
+            if (event.key === 'ArrowDown' && direction !== 'up') {
+                direction = 'down';
+            }
+            if (event.key === 'ArrowLeft' && direction !== 'right') {
+                direction = 'left';
+            }
+            if (event.key === 'ArrowRight' && direction !== 'left') {
+                direction = 'right';
+            }
+
+            if (event.key === 'Shift' && !boostActive) {
+                boostActive = true;
+                clearInterval(gameInterval);
+                gameInterval = setInterval(updateGame, boostSpeed);  // Aumentamos la velocidad
+            }
+
+            toggleButtonState(event.key, true);  // Aplicamos animación de tecla presionada
+        });
+
+        // Evento para manejar cuando se sueltan las teclas
+        document.addEventListener('keyup', (event) => {
+            if (event.key === 'Shift' && boostActive) {
+                boostActive = false;
+                clearInterval(gameInterval);
+                gameInterval = setInterval(updateGame, normalSpeed);  // Volvemos a la velocidad normal
+            }
+
+            toggleButtonState(event.key, false);  // Volvemos a la animación normal
+        });
 
         document.getElementById('countdown').style.display = 'none';
         updateHearts();
