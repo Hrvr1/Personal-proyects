@@ -1,6 +1,6 @@
 # Personal Projects
 
-Welcome to the **Personal Projects** repository! This repository is dedicated to showcasing and storing various personal projects, ranging from simple applications to complex systems. Below, you will find a list of the current projects available, each with a link to its own detailed README.
+Welcome to the **Personal Projects** repository! This repository is dedicated to showcasing and storing various personal projects, ranging from simple applications to complex systems. Below, you will find a list of the current projects available, each with a link to its own detailed README.md.
 
 ## Projects
 
