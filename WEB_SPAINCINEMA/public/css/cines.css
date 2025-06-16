@@ -1,0 +1,307 @@
+.cine-body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5; 
+  color: #333; 
+}
+
+.cine-container {
+  max-width: 100%;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff; 
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.cine-container h1 {
+  color: #000000; 
+  margin-bottom: 30px;
+  font-size: 2.8rem; 
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 3px solid #007bff; 
+  padding-bottom: 10px;
+}
+
+.cine-table img {
+  max-width: 150px;
+  max-height: 150px;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  margin: 0 auto;
+  display: block;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cine-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cine-form label {
+  font-weight: bold;
+  color: #333;
+  font-size: 1.2rem;
+  display: block;
+}
+
+.cine-form input[type="text"],
+.cine-form input[type="number"],
+.cine-form textarea {
+  width: calc(100% - 20px);
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px; 
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  color: #333; 
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); 
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  margin-right: 10px; 
+}
+
+.cine-form input[type="text"]:focus,
+.cine-form input[type="number"]:focus,
+.cine-form textarea:focus {
+  border-color: #007bff;
+  background-color: #ffffff; 
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+.cine-form button {
+  padding: 15px 20px;
+  background-color: #007bff; 
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  margin-top: 20px; 
+}
+
+.cine-form button:hover {
+  background-color: #0056b3; 
+  transform: scale(1.05); 
+}
+
+.cine-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.cine-table th, .cine-table td {
+  padding: 15px;
+  text-align: left;
+  font-size: 1rem;
+  color: #333; 
+  border-bottom: 1px solid #ddd;
+}
+
+.cine-table th {
+  background-color: #f9f9f9; 
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.cine-table tr:nth-child(even) {
+  background-color: #f5f5f5; 
+}
+
+.cine-table tr:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
+}
+
+.cine-btn {
+  padding: 10px 15px;
+  text-decoration: none;
+  color: white;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.cine-btn-warning {
+  background-color: #ffc107; 
+  color: #333;
+}
+
+.cine-btn-danger {
+  background-color: #dc3545; 
+}
+
+.cine-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.05); 
+}
+
+.add-cine-btn {
+  margin: 20px auto;
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.add-cine-btn:hover {
+  background-color: #0056b3; 
+  transform: scale(1.05); 
+}
+
+.paginacion {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.paginacion .page-link {
+  color: #007bff;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  margin: 0 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.paginacion .page-link:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+.paginacion .active .page-link {
+  background-color: #0056b3;
+  color: white;
+  border-color: #0056b3;
+}
+
+.btn-volver {
+  display: block;
+  max-width: 200px; 
+  margin: 20px auto 0; 
+  padding: 10px; 
+  background-color: #5a6268e7; 
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 20px; 
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-volver:hover {
+  background-color: #5A6268; 
+  transform: scale(1.05);
+}
+
+.btn-guardar-cambios {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff; 
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px; 
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-guardar-cambios:hover {
+  background-color: #0056b3; 
+  transform: scale(1.05); 
+}
+
+.cine-form select {
+  width: 100%; 
+  padding: 15px;
+  border: 1px solid #ddd; 
+  border-radius: 8px; 
+  font-size: 1rem;
+  background-color: #f9f9f9; 
+  color: #333;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); 
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.cine-form select:focus {
+  border-color: #007bff; 
+  background-color: #ffffff; 
+  outline: none; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.cine-form select option {
+  padding: 10px;
+  font-size: 1rem;
+  color: #333; 
+  background-color: #ffffff; 
+}
+
+.pelicula-imagen {
+  width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.btn-volver-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-volver {
+  display: inline-block;
+  width: 15%;
+  padding: 10px;
+  background-color: #6c757d;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-volver:hover {
+  background-color: #495057;
+  transform: scale(1.05);
+}
+
+.centered-table th,
+.centered-table td {
+    text-align: center;
+    vertical-align: middle;
+}

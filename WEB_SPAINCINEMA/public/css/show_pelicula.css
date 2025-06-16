@@ -1,0 +1,280 @@
+.pelicula-container {
+  display: flex;
+  justify-content: center;
+  max-width: 1200px;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pelicula-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.pelicula-imagen {
+  width: 100%;
+  height: auto;
+  max-height: 550px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pelicula-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  display: block;
+}
+
+.pelicula-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+}
+
+@media (max-width: 768px) {
+  .pelicula-container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .pelicula-imagen {
+    width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  .pelicula-info {
+    text-align: center;
+  }
+
+  .pelicula-info h1 {
+    font-size: 1.8rem;
+  }
+
+  .pelicula-precio,
+  .pelicula-precio-total {
+    font-size: 1.5rem;
+  }
+
+.pelicula-descripcion {
+    width: 100%;
+    text-align: left; 
+    white-space: normal;
+    overflow: visible;
+    word-break: break-word;
+}
+}
+
+
+
+.pelicula-info {
+  flex: 1;
+}
+
+.pelicula-info h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pelicula-generos {
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pelicula-genero {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+.pelicula-precio {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000;
+  margin: 1rem 0;
+}
+
+.pelicula-descripcion {
+    max-width: 300%;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    white-space: normal;    
+    overflow: visible;       
+    text-overflow: unset;    
+    word-break: break-word; 
+    text-align: center;
+}
+.pelicula-form label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.pelicula-form select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.pelicula-form button {
+  background-color: #065f46;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.pelicula-form button:hover {
+  background-color: #047857;
+}
+
+.trailer-container {
+  margin: 20px auto;
+  max-width: 800px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.trailer-container iframe {
+  width: 100%;
+  height: 450px;
+  border: none;
+}
+
+.no-trailer {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  padding: 20px;
+}
+
+.reseñas-container {
+  max-width: 50rem;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 2rem 1.5rem;
+}
+
+.reseña {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.reseña-form {
+  margin-bottom: 2rem;
+}
+
+.reseña-form select,
+.reseña-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.reseña-form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.reseña {
+  margin-bottom: 1.5rem;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+.accion-group {
+  margin: 15px 0;
+}
+
+.accion-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.accion-option {
+  flex: 1;
+}
+
+.accion-option input[type="radio"] {
+  display: none;
+}
+
+.accion-option input[type="radio"]:checked+.accion-btn {
+  border-color: #2c3e50;
+  background-color: #f8f9fa;
+  box-shadow: 0 0 0 2px #2c3e50;
+}
+
+.accion-btn {
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.accion-btn i {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.comprar-btn {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.reservar-btn {
+  color: #ffc107;
+  border-color: #ffc107;
+}
+
+.accion-btn:hover {
+  transform: translateY(-2px);
+}
+
+.pelicula-precio-total {
+  font-size: 20px;
+  color: #28a745;
+  margin-top: 10px;
+}

@@ -1,0 +1,77 @@
+﻿/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+   //background-clip: url('cars.mp4'); /* Reemplaza 'fondo.jpg' con la ruta de tu imagen de fondo */
+    background-size: cover;
+    color: blue;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0px auto 0 auto;   
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.5); /* Blanco semitransparente */
+    border-radius: 10px;
+    height: 210px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Estilos para botones */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff; /* Color azul */
+    color: white;
+}
+
+/* Estilos para enlaces */
+a {
+    color: #ffd800; /* Color amarillo */
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+
+
+
+
+
+
+.text-danger {
+    color: red;
+}
+.button-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+    .button-container .btn {
+        margin: 5px;
+    }
+
+.labels {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+
+

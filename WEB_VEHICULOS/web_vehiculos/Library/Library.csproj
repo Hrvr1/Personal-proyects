@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A35B68FD-DBE0-42D4-B915-4B7D3727F2C5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Library</RootNamespace>
+    <AssemblyName>Library</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CAD\CADComentario.cs" />
+    <Compile Include="CAD\CADLineaCarrito.cs" />
+    <Compile Include="CAD\CADMetodoPago.cs" />
+    <Compile Include="CAD\CADContacto.cs" />
+    <Compile Include="CAD\CADVehiculo.cs" />
+    <Compile Include="CAD\CADConsejos.cs" />
+    <Compile Include="CAD\CADMarcas.cs" />
+    <Compile Include="CAD\CADCarrito.cs" />
+    <Compile Include="CAD\CADListaFavorito.cs" />
+    <Compile Include="CAD\CADLineaPedido.cs" />
+    <Compile Include="CAD\CADPedido.cs" />
+    <Compile Include="CAD\CADBandejaNotificacion.cs" />
+    <Compile Include="CAD\CADLineaBandejaNotificacion.cs" />
+    <Compile Include="CAD\CADUsuario.cs" />
+    <Compile Include="EN\ENBandejaNotificacion.cs" />
+    <Compile Include="EN\ENComentario.cs" />
+    <Compile Include="EN\ENLineaCarrito.cs" />
+    <Compile Include="EN\ENMetodoPago.cs" />
+    <Compile Include="EN\ENPedido.cs" />
+    <Compile Include="EN\ENMarcas.cs" />
+    <Compile Include="EN\ENLineaPedido.cs" />
+    <Compile Include="EN\ENListaFavorito.cs" />
+    <Compile Include="EN\ENCarrito.cs" />
+    <Compile Include="EN\ENConsejos.cs" />
+    <Compile Include="EN\ENVehiculo.cs" />
+    <Compile Include="EN\ENContacto.cs" />
+    <Compile Include="EN\ENLineaBandejaNotificacion.cs" />
+    <Compile Include="EN\ENUsuario.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

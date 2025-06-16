@@ -1,0 +1,544 @@
+.create-pelicula-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulo {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #333;
+
+}
+
+.create-pelicula-container h1 {
+    color: #000000;
+    margin-bottom: 30px;
+    font-size: 2.8rem;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.create-pelicula-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.create-pelicula-form label {
+    font-weight: bold;
+    color: #333;
+    font-size: 1rem;
+    display: block;
+}
+
+.create-pelicula-form input[type="text"],
+.create-pelicula-form input[type="number"],
+.create-pelicula-form input[type="date"],
+.create-pelicula-form input[type="url"],
+.create-pelicula-form input[type="time"],
+.create-pelicula-form textarea,
+.create-pelicula-form select,
+.create-pelicula-form input[type="file"] {
+    width: calc(100% - 40px);
+    margin: 0 auto;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    color: #333;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.create-pelicula-form input:focus,
+.create-pelicula-form textarea:focus,
+.create-pelicula-form select:focus {
+    border-color: #007bff;
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.create-btn-guardar-cambios {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.create-btn-guardar-cambios:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.btn-volver {
+    display: block;
+    max-width: 200px;
+    margin: 20px auto 0;
+    padding: 10px;
+    background-color: #5a6268e7;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.create-btn-volver:hover {
+    background-color: #5a6268;
+    transform: scale(1.05);
+}
+
+.create-error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+}
+
+.editar-pelicula-container {
+    max-width: 100%;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.editar-pelicula-container h1 {
+    color: #000000;
+    margin-bottom: 30px;
+    font-size: 2.8rem;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.editar-pelicula-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.editar-pelicula-form label {
+    font-weight: bold;
+    color: #333;
+    font-size: 1rem;
+    display: block;
+}
+
+.editar-pelicula-form input[type="text"],
+.editar-pelicula-form input[type="number"],
+.editar-pelicula-form input[type="date"],
+.editar-pelicula-form input[type="url"],
+.editar-pelicula-form textarea,
+.editar-pelicula-form select,
+.editar-pelicula-form input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin: 0 auto;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    color: #333;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    align-items: center;
+}
+
+.editar-pelicula-form input:focus,
+.editar-pelicula-form textarea:focus,
+.editar-pelicula-form select:focus {
+    border-color: #007bff;
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.editar-btn-guardar-cambios {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.editar-btn-guardar-cambios:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.editar-btn-volver {
+    display: block;
+    width: 15%;
+    padding: 10px;
+    background-color: #6c757d;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.editar-btn-volver:hover {
+    background-color: #495057;
+    transform: scale(1.05);
+}
+
+.editar-error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+}
+
+.editar-pelicula-imagen {
+    max-width: 150px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#preview-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#preview-image {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    display: none;
+    margin: 0 auto;
+}
+
+.search-form {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-form input {
+    padding: 10px 15px;
+    font-size: 16px;
+    width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-form input:focus {
+    border-color: #007bff;
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.search-form .search-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-form .form-control {
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.search-form .search-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-form .sort-direction {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-form .sort-direction:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.paginacion {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.paginacion .page-link {
+    color: #007bff;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.paginacion .page-link:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.paginacion .active .page-link {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+}
+
+.pelicula-imagen {
+    width: 25rem;
+    height: 30rem;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+
+}
+
+.gestionar-pelicula-imagen {
+    max-width: 150px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pelicula-btn-asignar {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: auto;
+}
+
+.pelicula-btn-asignar:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.field-group label {
+    font-weight: bold;
+    color: #333;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.field-group input[type="date"],
+.field-group input[type="time"] {
+    width: calc(100% - 40px);
+    margin: 0 auto;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    color: #333;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.field-group input[type="date"]:focus,
+.field-group input[type="time"]:focus {
+    border-color: #007bff;
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.genero-checklist {
+    position: absolute;
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+    background-color: #ddd;
+    width: 12%;
+}
+
+.genero-checklist div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #f9f9f9;
+    padding: 10px 15px;
+    font-size: 0.90rem;
+}
+
+.genero-checklist input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #007bff;
+    cursor: pointer;
+}
+
+.genero-checklist div.form-check {
+    justify-content: space-between;
+
+}
+
+.form-check-input[type="checkbox"] {
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+}
+
+.toggle-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.toggle-btn:hover {
+    background-color: #0056b3;
+}
+
+.clear-filters-btn {
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+}
+
+.clear-filters-btn:hover {
+    background-color: #c82333;
+}
+
+
+.cartelera-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    justify-content: center;
+    place-items: center;
+    margin: 0 auto;
+    max-width: 1400px;
+}
+
+.descripcion-corta {
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    white-space: normal;
+}
+
+.pelicula-info {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.pelicula-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+    padding: 1.5rem;
+
+}

@@ -5,7 +5,10 @@ Welcome to the **Personal Projects** repository! This repository is dedicated to
 ## Projects
 
 - [Tennis Game](Tennis/README.md)
+- [Train Game](Train/README.md)
 - [Local Chat GPT](ChatGPT-Local/README.md)
+- [SPAINCINEMA Web Application](WEB_SPAINCINEMA/README.md)
+- [OnlyCars Marketplace Web Application](WEB_VEHICULOS/README.md)
 
 More projects coming soon...
 
@@ -15,7 +18,7 @@ To get started with any project in this repository:
 
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/your-username/Personal-projects.git
+   git clone https://github.com/Hredo/Personal-projects.git
    ```
 2. **Navigate to the desired project directory**:
    ```sh

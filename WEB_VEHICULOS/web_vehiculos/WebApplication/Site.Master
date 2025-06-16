@@ -1,0 +1,131 @@
+﻿﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="WebApplication.Site" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <title>OnlyCars</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" href="App_Images/logo/logo_onlycars.png" />
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/sb-admin-2.min.css" rel="stylesheet" />
+    <link href="css/sb-admin-2.css" rel="stylesheet" />
+    <link href="css/site_master.css" rel="stylesheet" />
+    <script src="js/sb-admin-2.js"></script>
+    <script src="js/sb-admin-2.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+    <style>
+        #Menu2 a.static {
+            color: white;
+            padding: 5px 15px;
+        }
+
+        #Menu1 a.static {
+            color: white;
+            padding: 5px 15px;
+        }
+
+        #MenuSuperior a.static {
+            text-decoration: none;
+            border-style: none;
+            padding-left: 20px;
+            padding-right: 0.15em;
+            color: cornflowerblue;
+            font: inherit;
+        }
+
+        .admin-text {
+            color: white;
+            padding: 5px 15px;
+        }
+
+    </style>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body id="Body1" runat="server">
+    <form id="form1" runat="server">
+        <div id="wrapper">
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="Default.aspx">
+                    <div class="sidebar-brand-text mx-3">OnlyCars</div>
+                </a>
+                <hr class="sidebar-divider my-0" />
+
+                <hr class="sidebar-divider" />
+
+                <div class="sidebar-heading">
+                </div>
+
+                <asp:Menu ID="Menu1" runat="server" CssClass="nav-link">
+                    <StaticMenuItemStyle CssClass="nav-item" />
+                    <DynamicMenuItemStyle CssClass="nav-link" />
+                    <Items>
+                        <asp:MenuItem Text="Catalogo" NavigateUrl="~/Catalogo.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Consejos" NavigateUrl="~/Consejos.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Venta" NavigateUrl="~/venta.aspx"></asp:MenuItem>
+                    </Items>
+                </asp:Menu>
+
+                <hr class="sidebar-divider" />
+
+                <asp:Menu ID="Menu2" runat="server" CssClass="nav-link" Visible ="false">
+                    <StaticMenuItemStyle CssClass="nav-item" />
+                    <DynamicMenuItemStyle CssClass="nav-link" />
+                    <Items>
+                        <asp:MenuItem Text="Zona administrador" NavigateUrl="~/user.aspx" ></asp:MenuItem>
+                        <asp:MenuItem Text="Moderación" NavigateUrl="~/AdminPage.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Panel de control" NavigateUrl="~/Mejoras.aspx"></asp:MenuItem>
+                    </Items>
+                </asp:Menu>
+
+                
+            </ul>
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <br class="Apple-interchange-newline">
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+
+                        <ul class="navbar-nav ml-auto">
+                            <asp:Menu ID="MenuSuperior" runat="server" CssClass="nav-link" Orientation="Horizontal">
+                                <StaticMenuItemStyle CssClass="master_nav" />
+                                <DynamicMenuItemStyle CssClass="nav-link dropdown-toggle" />
+                                <Items>
+                                    <asp:MenuItem Text="📫" NavigateUrl="~/BandejaNotificacion.aspx"></asp:MenuItem>
+                                    <asp:MenuItem Text="🛒" NavigateUrl="~/Carrito.aspx"></asp:MenuItem>
+                                    <asp:MenuItem Text="❤️​" NavigateUrl="~/Favorito.aspx"></asp:MenuItem>
+                                    <asp:MenuItem Text="Iniciar sesión" NavigateUrl="~/user.aspx" Value="UsuarioMenu">
+                                        <asp:MenuItem Text="Perfil" Value="Perfil" NavigateUrl="~/user.aspx"></asp:MenuItem>
+                                        <asp:MenuItem Text="Contacto" Value="Contacto" NavigateUrl="~/contacto.aspx"></asp:MenuItem>
+                                        <asp:MenuItem Text="Cerrar sesión" Value="CerrarSesion"></asp:MenuItem>
+                                        <asp:MenuItem Text="Login" Value="Login" NavigateUrl="~/login.aspx"></asp:MenuItem>
+                                        <asp:MenuItem Text="Registrarse" Value="Registrarse" NavigateUrl="~/register.aspx"></asp:MenuItem>
+                                    </asp:MenuItem>
+                                </Items>
+                            </asp:Menu>
+                        </ul>
+
+                    </nav>
+
+                    <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; OnlyCars 2024</span>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
