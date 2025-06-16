@@ -30,7 +30,7 @@ The **Train Game** is a fun and challenging browser-based game inspired by the c
 
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/your-username/Personal-projects.git
+   git clone https://github.com/Hredo/Personal-projects.git
    ```
 2. **Navigate to the project directory**:
    ```sh
